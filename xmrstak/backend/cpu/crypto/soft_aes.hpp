@@ -27,7 +27,8 @@
 #pragma once
 
 #ifdef __GNUC__
-#include <x86intrin.h>
+//#include <x86intrin.h>
+#include "sse2neon.h"
 #else
 #include <intrin.h>
 #endif // __GNUC__
@@ -110,12 +111,12 @@ static inline uint32_t sub_word(uint32_t key)
 		 saes_sbox[key & 0xff];
 }
 
-#ifdef __clang__
+//#ifdef __clang__
 static inline uint32_t _rotr(uint32_t value, uint32_t amount)
 {
 	return (value >> amount) | (value << ((32 - amount) & 31));
 }
-#endif
+//#endif
 
 static inline __m128i soft_aeskeygenassist(__m128i key, uint8_t rcon)
 {

@@ -20,7 +20,8 @@
 #include <stdio.h>
 
 #ifdef __GNUC__
-#include <x86intrin.h>
+//#include <x86intrin.h>
+#include "sse2neon.h"
 static inline uint64_t _umul128(uint64_t a, uint64_t b, uint64_t* hi)
 {
 	unsigned __int128 r = (unsigned __int128)a * (unsigned __int128)b;

@@ -36,7 +36,8 @@ extern "C"
 #include <stdlib.h>
 
 #ifdef __GNUC__
-#include <mm_malloc.h>
+//#include <mm_malloc.h>
+#include <malloc.h>
 #else
 #include <malloc.h>
 #endif // __GNUC__
@@ -205,12 +206,12 @@ cryptonight_ctx* cryptonight_alloc_ctx(size_t use_fast_mem, size_t use_mlock, al
 	{
 		hashMemSize = AEON_MEMORY;
 	}
-	cryptonight_ctx* ptr = (cryptonight_ctx*)_mm_malloc(sizeof(cryptonight_ctx), 4096);
+	cryptonight_ctx* ptr = (cryptonight_ctx*)aligned_alloc(4096, sizeof(cryptonight_ctx));
 
 	if(use_fast_mem == 0)
 	{
 		// use 2MiB aligned memory
-		ptr->long_state = (uint8_t*)_mm_malloc(hashMemSize, hashMemSize);
+		ptr->long_state = (uint8_t*)aligned_alloc(hashMemSize, hashMemSize);
 		ptr->ctx_info[0] = 0;
 		ptr->ctx_info[1] = 0;
 		return ptr;
@@ -227,7 +228,7 @@ cryptonight_ctx* cryptonight_alloc_ctx(size_t use_fast_mem, size_t use_mlock, al
 
 	if(ptr->long_state == NULL)
 	{
-		_mm_free(ptr);
+		free(ptr);
 		if(bRebootDesirable)
 			msg->warning = "VirtualAlloc failed. Reboot might help.";
 		else
@@ -254,7 +255,7 @@ cryptonight_ctx* cryptonight_alloc_ctx(size_t use_fast_mem, size_t use_mlock, al
 
 	if (ptr->long_state == MAP_FAILED)
 	{
-		_mm_free(ptr);
+		free(ptr);
 		msg->warning = "mmap failed";
 		return NULL;
 	}
@@ -296,7 +297,7 @@ void cryptonight_free_ctx(cryptonight_ctx* ctx)
 #endif // _WIN32
 	}
 	else
-		_mm_free(ctx->long_state);
+		free(ctx->long_state);
 
-	_mm_free(ctx);
+	free(ctx);
 }

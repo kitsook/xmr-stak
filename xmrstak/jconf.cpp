@@ -41,7 +41,8 @@
 #define strcasecmp _stricmp
 #include <intrin.h>
 #else
-#include <cpuid.h>
+//#include <cpuid.h>
+#include "cpuid.h"
 #endif
 
 
